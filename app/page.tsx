@@ -1,4 +1,4 @@
-// TEST VERSION 2
+// TEST VERSION 3
 "use client";
 
 import { useState } from "react";
@@ -28,53 +28,16 @@ export default function Home() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      flexDirection: "column",
-      fontFamily: "Arial"
-    }}>
-      <h1>CMMD Staff Store</h1>
-
-  "use client";
-
-import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-export default function Home() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setMessage("Login failed. Check credentials.");
-    } else {
-      window.location.href = "/merch";
-    }
-  };
-
-  return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      flexDirection: "column",
-      fontFamily: "Arial"
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        flexDirection: "column",
+        fontFamily: "Arial",
+      }}
+    >
       <h1>CMMD Staff Store</h1>
 
       <input
@@ -100,7 +63,9 @@ export default function Home() {
         Sign In
       </button>
 
-      {message && <p style={{ marginTop: "10px", color: "red" }}>{message}</p>}
+      {message && (
+        <p style={{ marginTop: "10px", color: "red" }}>{message}</p>
+      )}
     </div>
   );
 }
