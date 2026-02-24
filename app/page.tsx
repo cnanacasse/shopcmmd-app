@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -10,19 +10,31 @@ const supabase = createClient(
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      window.location.href = "/merch";
+    }
+  };
+
   const login = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
-      password,
+      options: {
+        emailRedirectTo: "https://www.shopcmmd.com/",
+      },
     });
 
     if (error) {
       setMessage("Login failed.");
     } else {
-      window.location.href = "/merch";
+      setMessage("Check your email for login link.");
     }
   };
 
@@ -35,13 +47,6 @@ export default function Home() {
         placeholder="Work Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-      />
-      <br /><br />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
       />
       <br /><br />
       <button onClick={login}>Login</button>
