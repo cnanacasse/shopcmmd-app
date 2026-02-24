@@ -34,12 +34,12 @@ export default function Merch() {
       <h1 style={{ textAlign: "center" }}>CMMD Staff Merch Store</h1>
 
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "30px",
-          marginTop: "40px",
-        }}
+          style={{
+  display: "grid",
+  gridTemplateColumns: "2fr 1fr",
+  gap: "40px",
+  marginTop: "40px"
+}}
       >
         {products.map((product) => (
           <div
