@@ -1,6 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const products = [
   {
@@ -28,12 +34,48 @@ export default function Merch() {
     const size = selectedSize[product.id];
     const qty = quantity[product.id] || 1;
 
-    if (!size) return alert("Please select a size");
+    if (!size) {
+      alert("Please select a size");
+      return;
+    }
 
     setCart([...cart, { ...product, size, qty }]);
   };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  const submitOrder = async () => {
+    if (cart.length === 0) {
+      alert("No items in cart");
+      return;
+    }
+
+    console.log("Submitting order...");
+
+    const { data: { user }, error: userError } =
+      await supabase.auth.getUser();
+
+    console.log("User:", user);
+    console.log("User error:", userError);
+
+    const { data, error } = await supabase.from("orders").insert([
+      {
+        user_email: user?.email || "unknown",
+        items: cart,
+        total: total,
+      },
+    ]);
+
+    console.log("Insert data:", data);
+    console.log("Insert error:", error);
+
+    if (error) {
+      alert("Error saving order. Check console.");
+    } else {
+      alert("Order submitted successfully!");
+      setCart([]);
+    }
+  };
 
   return (
     <div style={{ padding: "40px", fontFamily: "Arial" }}>
@@ -155,6 +197,7 @@ export default function Merch() {
                   borderRadius: "6px",
                   cursor: "pointer",
                 }}
+                onClick={submitOrder}
               >
                 Submit Order
               </button>
